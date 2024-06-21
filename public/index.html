@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" 
+      type="image/png" 
+      href="1.png" />
+    <title>Página de Escalas</title>
+    <style>
+      body {
+        height: 100%;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 20px;
+      }
+      h2 {
+        margin-bottom: 20px;
+      }
+      input[type="date"] {
+        background-color: #0080ff;
+        padding: 15px;
+        font-family: "Roboto Mono", monospace;
+        color: #ffffff;
+        font-size: 18px;
+        border: none;
+        outline: none;
+        border-radius: 5px;
+      }
+      form {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      form label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        text-align: left;
+      }
+      form input,
+      form select {
+        width: calc(100% - 20px);
+        padding: 8px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+      form button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      form button:hover {
+        background-color: #45a049;
+      }
+      table { 
+        width: 90%;
+        margin: 0 auto;
+        border-collapse: collapse;
+        background-color: rgba(245, 243, 243, 0.589); 
+      }    
+      th, td {
+        padding: 15px; 
+        border: 1px solid #000;
+        text-align: center;
+        white-space: pre-line;
+        font-size: x-large;
+        font-weight: bold;
+      } 
+      th {
+        background-color: #f77722;
+        padding: 2px 60px;
+        font-weight: bold;
+        font-size: x-large;
+        font-family: Arial, sans-serif;
+      }
+      @media (max-width: 600px) {
+        table {
+           width: 100%; /* Para telas menores, ajusta a largura da tabela para ocupar toda a largura disponível */
+        }
+        form input,
+        form select {
+          width: 100%;
+        }
+      }
+      .acao-button {
+        display: inline-block;
+        padding: 5px 20px;
+        margin: 4px 2px;
+        font-size: 16px;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+      }
+      .acao-button.editar-button {
+        background-color: #3498db;
+        color: #fff;
+      }
+      .acao-button.deletar-button {
+        background-color: #e74c3c;
+        color: #fff;
+      }
+      .acao-button.add-button {
+        background-color: #2ecc71;
+        color: #fff;
+      }
+      .salve {
+        padding: 10px;
+        margin: 5px;
+        font-size: 16px;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+      .img {
+        width: 30%;
+        height: auto;
+        margin-bottom: 10px;
+      }
+      h1 {
+        font-size: 60px; 
+        font-weight: bold;
+        margin-top: 10px;
+      }
+      .dubla-borda {
+        margin: 10px auto;
+        padding: 30px;
+        border: 10px double #f05e1b;
+        border-radius: 10px; 
+        outline: 2px solid #f57c0b;
+        outline-offset: -2px;
+        position: relative;
+        width: 65%;
+      }
+      .dubla-borda::before {
+        content: "";
+        position: absolute;
+        top: 10%;
+        right: 10px;
+        width: 50%;
+        height: 100%;
+        background-image: url("1.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        opacity: 0.5;
+        z-index: -1;
+      } 
+    </style>
+  </head>
+  <body>
+    <input type="date" id="data" onchange="gerarTabela()" />
+
+    <h2>Gerenciamento de Escalas</h2>
+    <form id="formEscala">
+      <label for="trabalho">Trabalho:</label>
+      <input type="text" id="trabalho" name="trabalho" required />
+      <br /><br />
+
+      <label for="horario">Horário:</label>
+      <input type="datetime" id="horario" name="horario" required />
+      <br /><br />
+
+      <label for="direcao">Direção:</label>
+      <select id="direcao" name="direcao" required>
+        <option>LIVRE</option>
+        <option>Pr. Eloi</option>
+        <option>Diá. Cleiton</option>
+        <option>Diá. Cleitsone</option>
+        <option>Diá. Alípio</option>
+        <option>Aux. Wagner</option>
+        <option>Aux. Viana</option>
+        <option>Aux. Joadison</option>
+        <option>Aux. Vitor</option>
+        <option>Ir. Liduida e Ir. Mônica F.</option>
+        <option>
+          Ir. Mônica F. e Ir. Ruth<br />
+          Ir Monique e Ir Monalisa
+        </option>
+      </select>
+      <br /><br />
+
+      <label for="recepcao">Recepção:</label>
+      <select id="recepcao" name="recepcao">
+        <option>LIVRE</option>
+        <option>Natalia</option>
+        <option>Victoria</option>
+        <option>Ester</option>
+        <option>Rebeca</option>
+      </select>
+      <br /><br />
+
+      <label for="porteiro">Porteiro:</label>
+      <select id="porteiro" name="porteiro">
+        <option>LIVRE</option>
+        <option>Dia. Cleiton</option>
+        <option>Dia. Cleitsone</option>
+        <option>Aux. Wagner</option>
+        <option>Aux. Viana</option>
+        <option>Aux. Joadison</option>
+        <option>Aux. Vitor</option>
+        <option>Aux. Alípio</option>
+      </select>
+      <br /><br />
+
+      <button type="submit">Salvar</button>
+    </form>
+
+    <div id="tabelaContainer" class="dubla-borda"></div>
+
+    <button class="salve" onclick="salvarTabela()">Salvar Imagem</button>
+
+    <script>
+      function gerarTabela() {
+        var inputData = document.getElementById("data").value;
+        console.log("Data selecionada:", inputData);
+
+        var dataSelecionada = new Date(inputData);
+        console.log("Data formatada:", dataSelecionada);
+
+        var diasSemana = [
+          "Domingo",
+          "Segunda",
+          "Terça",
+          "Quarta",
+          "Quinta",
+          "Sexta",
+          "Sábado",
+        ];
+        var meses = [
+          "Janeiro",
+          "Fevereiro",
+          "Março",
+          "Abril",
+          "Maio",
+          "Junho",
+          "Julho",
+          "Agosto",
+          "Setembro",
+          "Outubro",
+          "Novembro",
+          "Dezembro",
+        ];
+
+        var tabelaHtml = `
+        <img src="./adtc.png" class="img" />
+        <h1>ESCALA SEMANAL DE TRABALHOS DA IGREJA</h1>
+
+        <table id="tabelaEscalas">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Trabalho</th>
+              <th>Horário</th>
+              <th>Direção</th>
+              <th>Recepção</th>
+              <th>Porteiro</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+        for (var i = 0; i < 7; i++) {
+          var data = new Date(dataSelecionada);
+          data.setDate(dataSelecionada.getDate() + i);
+
+          var diaSemana = diasSemana[data.getDay()];
+          var dia = data.getDate();
+          var mes = meses[data.getMonth()];
+          var ano = data.getFullYear();
+
+          if (diaSemana === "Segunda") {
+            tabelaHtml += `
+            <tr>
+                <td>${diaSemana} <br> ${dia} de ${mes} de ${ano}</td>
+                <td>LIVRE</td>
+                <td>LIVRE</td>
+                <td>LIVRE</td>
+                <td>LIVRE</td>
+                <td>LIVRE</td>
+                <td>
+                    <button class="acao-button editar-button" onclick="editarEscala(this)">Editar</button>
+                    <button class="acao-button add-button" onclick="addEscala(this)">Adicionar</button>
+                </td>
+            </tr>
+        `;
+          } else if (diaSemana === "Terça") {
+            tabelaHtml += `
+            <tr>
+                <td rowspan="2">${diaSemana} <br> ${dia} de ${mes} de ${ano}</td>
+                <td>Círculo de Oração</td>
+                <td>18hs</td>
+                <td>Ir. Liduida e Ir. Mônica F.</td>
+                <td>LIVRE</td>
+                <td>LIVRE</td>
+                <td>
+                    <button class="acao-button editar-button" onclick="editarEscala(this)">Editar</button>
+                    <button class="acao-button add-button" onclick="addEscala(this)">Adicionar</button>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Ensaio de senhoras e jovens</td>
+                <td>20 hs</td>
+                <td>Ir. Mônica F. e Ir. Ruth <br> Ir Monique e Ir Monalisa</td>
+                <td>LIVRE</td>
+                <td>LIVRE</td>
+                <td>
+                    <button class="acao-button editar-button" onclick="editarEscala(this)">Editar</button>
+                    <button class="acao-button deletar-button" onclick="deletarEscala(this)">Deletar</button>
+                </td>
+            </tr>
+        `;
+          } else if (diaSemana === "Quarta") {
+            tabelaHtml += `
+            <tr>
+                <td>${diaSemana} <br> ${dia} de ${mes} de ${ano}</td>
+                <td>LIVRE</td>
+                <td>LIVRE</td>
+                <td>LIVRE</td>
+                <td>LIVRE</td>
+                <td>LIVRE</td>
+                <td>
+                    <button class="acao-button editar-button" onclick="editarEscala(this)">Editar</button>
+                    <button class="acao-button add-button" onclick="addEscala(this)">Adicionar</button>
+                </td>
+            </tr>
+        `;
+          } else if (diaSemana === "Quinta") {
+            tabelaHtml += `
+            <tr>
+                <td>${diaSemana} <br> ${dia} de ${mes} de ${ano}</td>
+                <td>Culto de Doutrina</td>
+                <td>19 hs</td>
+                <td>Pr. Eloi</td>
+                <td></td>
+                <td></td>
+                <td>
+                    <button class="acao-button editar-button" onclick="editarEscala(this)">Editar</button>
+                    <button class="acao-button add-button" onclick="addEscala(this)">Adicionar</button>
+                </td>
+            </tr>
+        `;
+          } else if (diaSemana === "Sexta") {
+            tabelaHtml += `
+            <tr>
+                <td>${diaSemana} <br> ${dia} de ${mes} de ${ano}</td>
+                <td>LIVRE</td>
+                <td>LIVRE</td>
+                <td>LIVRE</td>
+                <td>LIVRE</td>
+                <td>LIVRE</td>
+                <td>
+                    <button class="acao-button editar-button" onclick="editarEscala(this)">Editar</button>
+                    <button class="acao-button add-button" onclick="addEscala(this)">Adicionar</button>
+                </td>
+            </tr>
+        `;
+          } else if (diaSemana === "Sábado") {
+            tabelaHtml += `
+            <tr>
+                <td>${diaSemana} <br> ${dia} de ${mes} de ${ano}</td>
+                <td>LIVRE</td>
+                <td>LIVRE</td>
+                <td>LIVRE</td>
+                <td>LIVRE</td>
+                <td>LIVRE</td>
+                <td>
+                    <button class="acao-button editar-button" onclick="editarEscala(this)">Editar</button>
+                    <button class="acao-button add-button" onclick="addEscala(this)">Adicionar</button>
+                </td>
+            </tr>
+        `;
+          } else if (diaSemana === "Domingo") {
+            tabelaHtml += `
+            <tr>
+                <td rowspan="2">${diaSemana} <br> ${dia} de ${mes} de ${ano}</td>
+                <td>EBD</td>
+                <td>8 hs</td>
+                <td>Aux. Wagner</td>
+                <td>LIVRE</td>
+                <td>LIVRE</td>
+                <td>
+                    <button class="acao-button editar-button" onclick="editarEscala(this)">Editar</button>
+                    <button class="acao-button add-button" onclick="addEscala(this)">Adicionar</button>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Culto</td>
+                <td>18 hs</td>
+                <td>Pr. Eloi</td>
+                <td></td>
+                <td></td>
+                <td>
+                    <button class="acao-button editar-button" onclick="editarEscala(this)">Editar</button>
+                    <button class="acao-button deletar-button" onclick="deletarEscala(this)">Deletar</button>
+                </td>
+            </tr>
+        `;
+          }
+        }
+
+        tabelaHtml += `
+        </tbody>
+    </table>
+    `;
+
+        document.getElementById("tabelaContainer").innerHTML = tabelaHtml;
+      }
+
+      function adicionarListenersAcoes() {
+        const botoesEditar = document.querySelectorAll(".editar");
+        const botoesDeletar = document.querySelectorAll(".deletar");
+        const botoesAdd = document.querySelectorAll(".add");
+
+        botoesEditar.forEach((botao) => {
+          botao.removeEventListener("click", editarEscala);
+          botao.addEventListener("click", editarEscala);
+        });
+
+        botoesDeletar.forEach((botao) => {
+          botao.removeEventListener("click", deletarEscala);
+          botao.addEventListener("click", deletarEscala);
+        });
+
+        botoesDeletar.forEach((botao) => {
+          botao.removeEventListener("click", addEscala);
+          botao.addEventListener("click", addEscala);
+        });
+      }
+
+      function editarEscala(button) {
+        var tr = button.closest("tr");
+        var tabela = document.getElementById("tabelaEscalas");
+        var rowIndex = tr.rowIndex;
+
+        if (rowIndex > 0 && tabela.rows[rowIndex].cells.length === 7) {
+          var prevRow = tabela.rows[rowIndex];
+          var prevFirstCell = prevRow.cells[0];
+          var prevData = prevFirstCell.textContent.trim().toLowerCase;
+          var diasDaSemana = [
+            "segunda",
+            "terça",
+            "quarta",
+            "quinta",
+            "sexta",
+            "sábado",
+            "domingo",
+          ];
+          if (!diasDaSemana.includes(prevData)) {
+            document.getElementById("trabalho").value =
+              tr.cells[1].textContent.trim();
+            document.getElementById("horario").value =
+              tr.cells[2].textContent.trim();
+            document.getElementById("direcao").value =
+              tr.cells[3].textContent.trim();
+            document.getElementById("recepcao").value =
+              tr.cells[4].textContent.trim();
+            document.getElementById("porteiro").value =
+              tr.cells[5].textContent.trim();
+          }
+        } else {
+          document.getElementById("trabalho").value =
+            tr.cells[0].textContent.trim();
+          document.getElementById("horario").value =
+            tr.cells[1].textContent.trim();
+          document.getElementById("direcao").value =
+            tr.cells[2].textContent.trim();
+          document.getElementById("recepcao").value =
+            tr.cells[3].textContent.trim();
+          document.getElementById("porteiro").value =
+            tr.cells[4].textContent.trim();
+
+          document.getElementById("data").value = "";
+        }
+
+        // Salva o índice da linha atual para edição
+        document.getElementById("formEscala").dataset.editandoId = rowIndex;
+      }
+
+      function salvarEdicao(event) {
+        event.preventDefault();
+
+        var newData = document.getElementById("data").value;
+        var newTrabalho = document.getElementById("trabalho").value;
+        var newHorario = document.getElementById("horario").value;
+        var newDirecao = document.getElementById("direcao").value;
+        var newRecepcao = document.getElementById("recepcao").value;
+        var newPorteiro = document.getElementById("porteiro").value;
+
+        var rowIndex = parseInt(
+          document.getElementById("formEscala").dataset.editandoId
+        );
+        if (!rowIndex || isNaN(rowIndex)) {
+          console.error("Não foi possível identificar a linha para edição.");
+          return;
+        }
+        var tabela = document.getElementById("tabelaEscalas");
+        var trEditando = tabela.rows[rowIndex];
+
+        if (rowIndex > 0 && tabela.rows[rowIndex].cells.length === 7) {
+          var prevRow = tabela.rows[rowIndex];
+          var prevFirstCell = prevRow.cells[0];
+          var prevData = prevFirstCell.textContent.trim().toLowerCase;
+          var diasDaSemana = [
+            "segunda",
+            "terça",
+            "quarta",
+            "quinta",
+            "sexta",
+            "sábado",
+            "domingo",
+          ];
+          if (!diasDaSemana.includes(prevData)) {
+            trEditando.cells[1].textContent = newTrabalho;
+            trEditando.cells[2].textContent = newHorario;
+            trEditando.cells[3].textContent = newDirecao;
+            trEditando.cells[4].textContent = newRecepcao;
+            trEditando.cells[5].textContent = newPorteiro;
+          }
+        } else {
+          trEditando.cells[0].textContent = newTrabalho;
+          trEditando.cells[1].textContent = newHorario;
+          trEditando.cells[2].textContent = newDirecao;
+          trEditando.cells[3].textContent = newRecepcao;
+          trEditando.cells[4].textContent = newPorteiro;
+        }
+
+        document.getElementById("formEscala").reset();
+        delete document.getElementById("formEscala").dataset.editandoId;
+      }
+
+      function deletarEscala(button) {
+        var tr = button.closest("tr");
+        var tbody = tr.parentNode;
+
+        var prevRow = tr.previousElementSibling;
+        if (prevRow && prevRow.cells.length === 7) {
+          var prevFirstCell = prevRow.cells[0];
+          console.log(prevFirstCell);
+          var prevRowspan =
+            parseInt(prevFirstCell.getAttribute("rowspan")) || 1;
+          if (prevRowspan > 1) {
+            prevFirstCell.setAttribute("rowspan", prevRowspan - 1);
+          }
+        }
+
+        tbody.removeChild(tr);
+      }
+
+      function addEscala(button) {
+        var tr = button.parentNode.parentNode;
+        var tbody = tr.parentNode;
+        var newRow = document.createElement("tr");
+
+        for (var i = 0; i < 5; i++) {
+          var newCell = document.createElement("td");
+          if (i == 0) {
+            newCell.innerHTML = "";
+          }
+          newRow.appendChild(newCell);
+        }
+
+        var actionCell = document.createElement("td");
+        actionCell.innerHTML = `
+                <button class="acao-button editar-button" onclick="editarEscala(this)">Editar</button>
+                <button class="acao-button deletar-button" onclick="deletarEscala(this)">Deletar</button>
+            `;
+        newRow.appendChild(actionCell);
+
+        tbody.insertBefore(newRow, tr.nextSibling);
+
+        var firstCell = tr.cells[0];
+        var currentRowspan = firstCell.getAttribute("rowspan");
+        currentRowspan = currentRowspan ? parseInt(currentRowspan) : 1;
+        firstCell.setAttribute("rowspan", currentRowspan + 1);
+      }
+
+      function salvarTabela() {
+        const tabela = document.getElementById("tabelaEscalas");
+        const colIndex = 6;
+        const rows = tabela.rows;
+        let removedCells = [];
+
+        for (let i = 0; i < rows.length; i++) {
+          const row = rows[i];
+          const cell = row.cells.length > colIndex ? row.cells[colIndex] : null;
+
+          if (cell) {
+            removedCells.push({ cell: cell, parent: row, index: colIndex });
+            cell.remove();
+          } else if (row.cells.length === 6) {
+            // Caso a linha tenha 5 colunas devido ao rowspan
+
+            const rowspanCell = row.cells[row.cells.length - 1];
+            removedCells.push({
+              cell: rowspanCell,
+              parent: row,
+              index: row.cells.length - 1,
+            });
+            rowspanCell.remove();
+          }
+        }
+
+        html2canvas(document.querySelector("#tabelaContainer")).then(canvas => {
+            const link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = "tabela_escala.png";
+            link.click();
+      })
+
+        /* html2canvas(tabela, {
+          allowTaint: false,
+          backgroundColor: null, // Fundo transparente
+          foreignObjectRendering: true, // Habilitar rendering de objetos estrangeiros se suportado
+          imageTimeout: 0, // Desabilitar timeout para carregar imagens
+          ignoreElements: (element) => element.classList.contains("ignore"), // Ignorar elementos com a classe 'ignore'
+          logging: true, // Habilitar logging
+          removeContainer: true, // Limpar elementos DOM clonados
+          scale: 2, // Ajustar a escala conforme necessário para melhor qualidade
+          useCORS: true, // Tentar carregar imagens de um servidor usando CORS
+          windowWidth: tabela.scrollWidth,
+          windowHeight: tabela.scrollHeight,
+          onrendered: function (canvas) {
+            const link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = "tabela_escala.png";
+            link.click();
+          },
+        }); */
+      }
+
+      document
+        .getElementById("formEscala")
+        .addEventListener("submit", salvarEdicao);
+    </script>
+  </body>
+</html>
