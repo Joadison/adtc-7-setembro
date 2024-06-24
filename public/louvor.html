@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Oswald"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/png" href="1.png" />
+    <title>Página de Escala de Louvor</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 10px;
+        width: auto;
+      }
+      input[type="date"] {
+        background-color: #0080ff;
+        padding: 15px;
+        font-family: "Roboto Mono", monospace;
+        color: #ffffff;
+        font-size: 18px;
+        border: none;
+        outline: none;
+        border-radius: 5px;
+      }
+      input[type="text"],
+      textarea,
+      select {
+        text-align: center;
+        font-family: "Oswald";
+        background: transparent;
+        font-size: medium;
+        white-space: pre-line;
+        border: none;
+        width: 100%;
+      }
+      h3 {
+        font-size: medium;
+        font-weight: normal;
+        margin: 0;
+        padding: 0;
+      }
+      table {
+        margin: 0 auto;
+        border-collapse: collapse;
+        background-color: rgba(245, 243, 243, 0.589);
+      }
+      td {
+        border: 1px solid #000;
+        text-align: center;
+        font-family: "Oswald";
+        white-space: pre-line;
+        font-size: smaller;
+        font-weight: bold;
+      }
+      th {
+        background-color: #f77722;
+        font-weight: bold;
+        padding: 0 50px;
+        border: 1px solid #000;
+        font-size: medium;
+      }
+      .acao-button {
+        padding: 5px 20px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+      }
+      .acao-button.deletar-button {
+        background-color: #e74c3c;
+        color: #fff;
+      }
+      .acao-button.add-button {
+        background-color: #2ecc71;
+        color: #fff;
+      }
+      .salve {
+        margin: 5px;
+        font-size: 16px;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+      }
+      .salve:hover {
+        background-color: #45a049;
+      }
+      .img {
+        width: 30%;
+        height: auto;
+        margin-bottom: 10px;
+      }
+      h1 {
+        font-size: 50px;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+      .dubla-borda {
+        padding: 10px 5px;
+        border: 10px double #f05e1b;
+        border-radius: 10px;
+        /* 
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; */
+      }
+      .dubla-borda::before {
+        content: "";
+        position: absolute;
+        top: 5%;
+        left: 35%;
+        width: 80%;
+        height: 40%;
+        background-image: url("1.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        opacity: 0.5;
+        z-index: -1;
+      }
+      /*caso resolução for no máximo 992px*/
+      @media screen and (min-width: 990px) {
+        th {
+        padding: 9px 80px;
+      }
+      .dubla-borda::before {
+        top: 38%;
+        width: 25%;
+        left: 45%;
+        height: 60%;
+      }
+      }
+      /*caso resolução for no máximo 685px*/
+      @media screen and (max-width: 685px) {
+        th {
+        padding: 5px 45px;
+        }
+        .dubla-borda::before {
+            top: 90%;
+            left: 19%;
+            width: 80%;
+            height: 170%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <input type="date" id="data" onchange="gerarTabela()" />
+
+    <div id="tabelaContainer" class="separa"></div>
+
+    <script>
+      function gerarTabela() {
+        var inputData = document.getElementById("data").value;
+        var parts = inputData.split("-");
+        var dataSelecionada = new Date(parts[0], parts[1] - 1, parts[2]);
+
+        var diasSemana = [
+          "Domingo",
+          "Segunda",
+          "Terça",
+          "Quarta",
+          "Quinta",
+          "Sexta",
+          "Sábado",
+        ];
+        var meses = [
+          "Janeiro",
+          "Fevereiro",
+          "Março",
+          "Abril",
+          "Maio",
+          "Junho",
+          "Julho",
+          "Agosto",
+          "Setembro",
+          "Outubro",
+          "Novembro",
+          "Dezembro",
+        ];
+
+        var tabelaHtml = `
+        <div  id="tabelaSalva" class="dubla-borda">
+        <img src="./adtc.png" class="img" />
+        <h1>ESCALA SEMANAL DE OPORTUNIDADE DA IGREJA</h1>
+
+        <table id="tabelaEscalas">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Culto</th>
+              <th>3 Hinos</th>
+              <th>Oportunidades</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+        for (var i = 0; i < 7; i++) {
+          var data = new Date(dataSelecionada);
+          data.setDate(dataSelecionada.getDate() + i);
+
+          var diaSemana = diasSemana[data.getDay()];
+          var dia = data.getDate();
+          var mes = meses[data.getMonth()];
+          var ano = data.getFullYear();
+
+         tabelaHtml += `
+            <tr>
+                <td>${diaSemana} <br> ${dia} de ${mes} de ${ano}</td>
+                <td><textarea rows="3" name="trabalho"></textarea></td>
+                <td><textarea rows="3" name="trabalho"></textarea></td>
+                <td><textarea rows="3" name="trabalho"></textarea></td>
+                <td>
+                    <button class="acao-button add-button" onclick="addEscala(this)">Adicionar</button>
+                </td>
+            </tr>
+        `;
+        }
+
+        tabelaHtml += `
+        </tbody>
+    </table>
+     </div>
+
+     
+    <button class="salve" onclick="salvarTabela()">Salvar Imagem</button>
+    `;
+
+        document.getElementById("tabelaContainer").innerHTML = tabelaHtml;
+      }
+
+      function adicionarListenersAcoes() {
+        const botoesDeletar = document.querySelectorAll(".deletar");
+        const botoesAdd = document.querySelectorAll(".add");
+
+        botoesDeletar.forEach((botao) => {
+          botao.removeEventListener("click", deletarEscala);
+          botao.addEventListener("click", deletarEscala);
+        });
+
+        botoesDeletar.forEach((botao) => {
+          botao.removeEventListener("click", addEscala);
+          botao.addEventListener("click", addEscala);
+        });
+      }
+
+      function deletarEscala(button) {
+        var tr = button.closest("tr");
+        var tbody = tr.parentNode;
+
+        var prevRow = tr.previousElementSibling;
+        if (prevRow && prevRow.cells.length === 5) {
+          var prevFirstCell = prevRow.cells[0];
+          console.log(prevFirstCell);
+          var prevRowspan =
+            parseInt(prevFirstCell.getAttribute("rowspan")) || 1;
+          if (prevRowspan > 1) {
+            prevFirstCell.setAttribute("rowspan", prevRowspan - 1);
+          }
+        }
+
+        tbody.removeChild(tr);
+      }
+
+      function addEscala(button) {
+        var tr = button.parentNode.parentNode;
+        var tbody = tr.parentNode;
+        var newRow = document.createElement("tr");
+
+        console.log("TESTE");
+
+        var newCell1 = document.createElement("td");
+        newCell1.innerHTML = `<textarea rows="3" name="trabalho"></textarea>`;
+        newRow.appendChild(newCell1);
+
+        var newCell2 = document.createElement("td");
+        newCell2.innerHTML = `<textarea rows="3" name="trabalho"></textarea>`;
+        newRow.appendChild(newCell2);
+
+        var newCell3 = document.createElement("td");
+        newCell3.innerHTML = `<textarea rows="3" name="trabalho"></textarea>`;
+        newRow.appendChild(newCell3);
+
+
+        var newCell6 = document.createElement("td");
+        newCell6.innerHTML = `
+        <button class="acao-button deletar-button" onclick="deletarEscala(this)">Deletar</button>
+      `;
+        newRow.appendChild(newCell6);
+
+        tbody.insertBefore(newRow, tr.nextSibling);
+
+        var firstCell = tr.cells[0];
+        var currentRowspan = firstCell.getAttribute("rowspan");
+        currentRowspan = currentRowspan ? parseInt(currentRowspan) : 1;
+        firstCell.setAttribute("rowspan", currentRowspan + 1);
+      }
+
+      function salvarTabela() {
+        const tabela = document.getElementById("tabelaEscalas");
+        const colIndex = 4;
+        const rows = tabela.rows;
+        let removedCells = [];
+
+        for (let i = 0; i < rows.length; i++) {
+          const row = rows[i];
+          const cell = row.cells.length > colIndex ? row.cells[colIndex] : null;
+
+          if (cell) {
+            removedCells.push({ cell: cell, parent: row, index: colIndex });
+            cell.remove();
+          } else if (row.cells.length === 4) {
+            const rowspanCell = row.cells[row.cells.length - 1];
+            removedCells.push({
+              cell: rowspanCell,
+              parent: row,
+              index: row.cells.length - 1,
+            });
+            rowspanCell.remove();
+          }
+        }
+
+        for (let i = 0; i < rows.length; i++) {
+          const row = rows[i];
+          const cells = row.cells;
+
+          for (let j = 0; j < cells.length; j++) {
+            const cell = cells[j];
+            const input = cell.querySelector("input, textarea, select");
+            if (input) {
+              const h3 = document.createElement("h3");
+              h3.textContent = input.value;
+              cell.replaceChild(h3, input);
+            }
+          }
+        }
+
+        html2canvas(document.querySelector("#tabelaSalva"), { scale: 2 }).then(
+          (canvas) => {
+            const link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = "tabela_escala.png";
+            link.click();
+          }
+        );
+      }
+    </script>
+  </body>
+</html>
