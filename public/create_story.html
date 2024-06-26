@@ -17,8 +17,10 @@
     }
 
     input[type="text"], input[type="number"] {
+      display: flex;
+      justify-content: center;
       padding: 8px;
-      margin: 5px;
+      margin: 5px auto;
       border: 1px solid #ccc;
       border-radius: 4px;
       font-size: 16px;
@@ -28,7 +30,6 @@
     }
 
     .checkbox-label {
-      display: inline-block;
       margin: 10px;
       cursor: pointer;
     }
@@ -51,7 +52,7 @@
     #image-container img {
       max-width: 20%;
       height: auto;
-      display: none; /* Começa oculto */
+      display: none; 
     }
   </style>
 </head>
