@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="https://utfs.io/f/b05fb922-f9a8-47ef-8834-dbed170256c5-1d.png" />
+  <title>Página de Escalas</title>
+  <style>
+    body {
+      font-family: 'Roboto Mono', monospace;
+      text-align: center;
+      margin: 20px;
+    }
+
+    input[type="text"], input[type="number"] {
+      padding: 8px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      width: 150px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    .checkbox-label {
+      display: inline-block;
+      margin: 10px;
+      cursor: pointer;
+    }
+
+    .checkbox-label img {
+      width: 80px;
+      height: auto;
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+
+    #image-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px auto;
+      height: 80vh;
+    }
+
+    #image-container img {
+      max-width: 20%;
+      height: auto;
+      display: none; /* Começa oculto */
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <form id="imageForm">
+      <label for="livro">Livro:</label>
+      <input type="text" id="livro" name="livro" placeholder="Insira o livro">
+      <label for="capitulo">Capítulo:</label>
+      <input type="number" id="capitulo" name="capitulo" placeholder="Insira o capítulo">
+      <label for="versiculo">Versículo:</label>
+      <input type="number" id="versiculo" name="versiculo" placeholder="Insira o versículo">
+    </form>
+  </div>
+
+  <div>
+    <label class="checkbox-label" for="1">
+      <input type="checkbox" id="1" onchange="toggleImageDisplay('1')">
+      <img src="./image/1.png" alt="Imagem 1">
+    </label>
+    <label class="checkbox-label" for="2">
+      <input type="checkbox" id="2" onchange="toggleImageDisplay('2')">
+      <img src="./image/2.png" alt="Imagem 2">
+    </label>
+    <label class="checkbox-label" for="3">
+      <input type="checkbox" id="3" onchange="toggleImageDisplay('3')">
+      <img src="./image/3.png" alt="Imagem 3">
+    </label>
+    <label class="checkbox-label" for="4">
+      <input type="checkbox" id="4" onchange="toggleImageDisplay('4')">
+      <img src="./image/4.png" alt="Imagem 4">
+    </label>
+    <label class="checkbox-label" for="5">
+      <input type="checkbox" id="5" onchange="toggleImageDisplay('5')">
+      <img src="./image/5.png" alt="Imagem 5">
+    </label>
+  </div>
+  
+  <div id="image-container">
+    <img id="generatedImage" src="" alt="Imagem gerada" />
+  </div>
+
+  <script>
+    async function generateImage(book, chapter, verse, checkboxId) {
+      try {
+        const response = await fetch(`/generateImage?book=${book}&chapter=${chapter}&verse=${verse}&checkboxId=${checkboxId}`);
+        if (!response.ok) {
+          throw new Error('Erro ao gerar imagem');
+        }
+        const imageData = await response.json();
+        const generatedImage = document.getElementById('generatedImage');
+        const imageSrc = imageData.path.replace(/^\.\/public\//, 'https://adtc-7-setembro.vercel.app/');
+        generatedImage.src = imageSrc;
+        generatedImage.style.display = 'block';
+      } catch (error) {
+        console.error('Erro ao obter imagem gerada:', error);
+      }
+    }
+
+    function toggleImageDisplay(checkboxId) {
+      const isChecked = document.getElementById(checkboxId).checked;
+      if (isChecked) {
+        const livro = document.getElementById('livro').value;
+        const capitulo = document.getElementById('capitulo').value;
+        const versiculo = document.getElementById('versiculo').value;
+        generateImage(livro, capitulo, versiculo, checkboxId);
+      } else {
+        document.getElementById('generatedImage').style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>

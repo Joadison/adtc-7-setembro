@@ -350,15 +350,58 @@
           }
         }
 
-        html2canvas(document.querySelector("#tabelaSalva"), { scale: 2 }).then(
+        /* html2canvas(document.querySelector("#tabelaSalva"), { scale: 2 }).then(
           (canvas) => {
-            const link = document.createElement("a");
+            if (navigator.share !== undefined) {
+              navigator.share({
+                title: 'ADTC - 7 de Setembro',
+                text: 'Escala',
+                url: 'https://seusite.com/sua_url',
+              })
+            }
+            /* const link = document.createElement("a");
             link.href = canvas.toDataURL("image/png");
             link.download = "tabela_escala.png";
-            link.click();
+            link.click(); 
           }
-        );
+        ); */
+        html2canvas(document.querySelector("#tabelaSalva"), { scale: 2 }).then(
+  (canvas) => {
+    // Convertendo o canvas para uma URL de imagem
+    const imageDataUrl = canvas.toDataURL();
+
+    // Verificando se o navegador suporta a API de compartilhamento
+    if (navigator.share !== undefined) {
+      navigator.share({
+        title: 'ADTC - 7 de Setembro',
+        text: 'Escala de trabalho',
+        url: 'https://seusite.com/sua_url',
+        files: [new File([dataURLtoBlob(imageDataUrl)], 'imagem.png', { type: 'image/png' })],
+      })
+      .then(() => console.log('Compartilhamento bem-sucedido'))
+      .catch((error) => console.error('Erro ao compartilhar:', error));
+    } else {
+      console.error('A API de compartilhamento não é suportada neste navegador.');
+    }
+  }
+);
+
+// Função auxiliar para converter data URL para Blob
+function dataURLtoBlob(dataURL) {
+  const arr = dataURL.split(',');
+  const mime = arr[0].match(/:(.*?);/)[1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new Blob([u8arr], { type: mime });
+}
+
       }
+    
+
     </script>
   </body>
 </html>
