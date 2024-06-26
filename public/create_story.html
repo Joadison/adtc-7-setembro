@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/png" href="https://utfs.io/f/b05fb922-f9a8-47ef-8834-dbed170256c5-1d.png" />
-  <title>Página de Escalas</title>
+  <title>Página de Story</title>
   <style>
     body {
       font-family: 'Roboto Mono', monospace;
@@ -98,14 +98,21 @@
   <script>
     async function generateImage(book, chapter, verse, checkboxId) {
       try {
-        const response = await fetch(`/generateImage?book=${book}&chapter=${chapter}&verse=${verse}&checkboxId=${checkboxId}`);
+        const response = await fetch(`https://back-adtc-7setembro.onrender.com/generateImage?book=${book}&chapter=${chapter}&verse=${verse}&checkboxId=${checkboxId}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'image/png'
+          }
+        });
         if (!response.ok) {
           throw new Error('Erro ao gerar imagem');
         }
-        const imageData = await response.json();
+        console.log(response)
+        const blob = await response.blob();
+        console.log(blob)
+        const imageUrl = URL.createObjectURL(blob);
         const generatedImage = document.getElementById('generatedImage');
-        const imageSrc = imageData.path.replace(/^\.\/public\//, 'https://adtc-7-setembro.vercel.app/');
-        generatedImage.src = imageSrc;
+        generatedImage.src = imageUrl;
         generatedImage.style.display = 'block';
       } catch (error) {
         console.error('Erro ao obter imagem gerada:', error);
