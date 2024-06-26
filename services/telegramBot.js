@@ -1,9 +1,8 @@
 const TelegramBot = require('node-telegram-bot-api');
 const axios = require('axios'); 
-const fs = require('fs').promises;
 
 const token = '7494109745:AAFXplcuuM2vUPoOv08Zlrny0fMXBTy2qt8';
-const imageUrl = 'https://546a-168-196-22-145.ngrok-free.app/generateImageA';
+const imageUrl = 'https://adtc-7-setembro.vercel.app/generateImageA';
 const bot = new TelegramBot(token, { polling: true });
 
 function initializeBot() {
