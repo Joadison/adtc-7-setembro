@@ -1,15 +1,17 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "index.js",
-        "use": "@vercel/node"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "/app.js"
-      }
-    ]
+  "version": 2,
+  "builds": [
+    {
+      "src": "app.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    { "src": "/", "dest": "app.js" },
+    { "src": "/escala", "dest": "app.js" },
+    { "src": "/louvor", "dest": "app.js" },
+    { "src": "/create-story", "dest": "app.js" },
+    { "src": "/generateImage", "dest": "app.js" },
+    { "src": "/generateImageA", "dest": "app.js" }
+  ]
 }
