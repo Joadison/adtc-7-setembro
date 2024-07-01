@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
       href="https://fonts.googleapis.com/css?family=Oswald"
@@ -126,7 +126,7 @@
         left: 35%;
         width: 80%;
         height: 40%;
-        background-image: url("https://utfs.io/f/b05fb922-f9a8-47ef-8834-dbed170256c5-1d.png");
+        background-image: url("1.png");
         background-size: cover;
         background-repeat: no-repeat;
         opacity: 0.5;
@@ -172,8 +172,8 @@
     <script>
       function gerarTabela() {
         var inputData = document.getElementById("data").value;
-        var dataSelecionada = new Date(inputData);
-        console.log("Data formatada:", dataSelecionada);
+        var parts = inputData.split("-");
+        var dataSelecionada = new Date(parts[0], parts[1] - 1, parts[2]);
 
         var diasSemana = [
           "Domingo",
@@ -201,7 +201,7 @@
 
         var tabelaHtml = `
         <div  id="tabelaSalva" class="dubla-borda">
-        <img src="https://utfs.io/f/e04d67ae-b098-4ff3-95fb-829bf46f171c-1s2qa.png" class="img" />
+        <img src="adtc.png" class="img" />
         <h1>ESCALA SEMANAL DE TRABALHOS DA IGREJA</h1>
 
         <table id="tabelaEscalas">
@@ -538,21 +538,6 @@
         document.getElementById("tabelaContainer").innerHTML = tabelaHtml;
       }
 
-      function adicionarListenersAcoes() {
-        const botoesDeletar = document.querySelectorAll(".deletar");
-        const botoesAdd = document.querySelectorAll(".add");
-
-        botoesDeletar.forEach((botao) => {
-          botao.removeEventListener("click", deletarEscala);
-          botao.addEventListener("click", deletarEscala);
-        });
-
-        botoesDeletar.forEach((botao) => {
-          botao.removeEventListener("click", addEscala);
-          botao.addEventListener("click", addEscala);
-        });
-      }
-
       function deletarEscala(button) {
         var tr = button.closest("tr");
         var tbody = tr.parentNode;
@@ -682,14 +667,20 @@
           }
         }
 
-        html2canvas(document.querySelector("#tabelaSalva"),{scale: 2}).then(
+        /* html2canvas(document.querySelector("#tabelaSalva"),{scale: 2}).then(
           (canvas) => {
             const link = document.createElement("a");
             link.href = canvas.toDataURL("image/png");
             link.download = "tabela_escala.png";
             link.click();
           }
-        ); 
+        );  */
+       html2canvas(document.querySelector("#tabelaSalva"), { scale: 2 }).then(canvas => {
+                const link = document.createElement("a");
+                link.href = canvas.toDataURL("image/png");
+                link.download = "tabela_escala.png";
+                link.click();
+            });
       }
     </script>
   </body>
